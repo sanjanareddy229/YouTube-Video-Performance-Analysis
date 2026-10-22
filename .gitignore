@@ -12,6 +12,10 @@ __pycache__/
 venv/
 env/
 
+# Build artifacts
+target/
+mapreduce/target/
+
 # Sensitive files & credentials
 .env
 .env.*

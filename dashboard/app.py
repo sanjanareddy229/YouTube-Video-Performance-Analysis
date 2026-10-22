@@ -203,11 +203,12 @@ def main():
     # ---------------------------------------------------------
     # 2. Visualizations Tabs
     # ---------------------------------------------------------
-    tab1, tab2, tab3, tab4 = st.tabs([
+    tab1, tab2, tab3, tab4, tab5 = st.tabs([
         "🏆 Top 10 Videos",
         "📊 Category Analysis",
         "📈 Engagement & Correlations",
-        "📋 Data Explorer"
+        "📋 Data Explorer",
+        "⚡ Big Data Results (MapReduce & Hive)"
     ])
 
     # Tab 1: Top 10 Videos by Views
@@ -339,6 +340,60 @@ def main():
             filtered_df[['title', 'channel_title', 'category_name', 'views', 'likes', 'comment_count', 'engagement_rate_pct']].head(100),
             use_container_width=True
         )
+
+    # Tab 5: Big Data Pipeline Outputs (Hadoop & Hive)
+    with tab5:
+        st.subheader("⚡ Big Data Pipeline Outputs")
+        st.markdown("Verified outputs produced by **Java MapReduce** and **Apache Hive** batch analytics.")
+
+        # 1. MapReduce Output
+        st.markdown("#### 1. Java MapReduce Aggregation (`part-r-00000`)")
+        mr_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), "outputs", "mapreduce_output", "part-r-00000")
+        if not os.path.exists(mr_file):
+            mr_file = "outputs/mapreduce_output/part-r-00000"
+
+        if os.path.exists(mr_file):
+            mr_df = pd.read_csv(mr_file, sep="\t")
+            st.success("✅ MapReduce job completed with `_SUCCESS` status on HDFS/LocalRunner.")
+            st.dataframe(mr_df.style.format({
+                'TotalVideos': '{:,.0f}',
+                'TotalViews': '{:,.0f}',
+                'TotalLikes': '{:,.0f}',
+                'TotalComments': '{:,.0f}',
+                'AvgViews': '{:,.0f}',
+                'AvgLikes': '{:,.0f}'
+            }), use_container_width=True)
+        else:
+            st.info("MapReduce output not found. Run `run_codespace_pipeline.sh` to generate `part-r-00000`.")
+
+        st.markdown("---")
+
+        # 2. Apache Hive Results
+        st.markdown("#### 2. Apache Hive Analytical Query Outputs")
+        hive_cat_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), "outputs", "hive_results", "hive_category_summary.tsv")
+        if not os.path.exists(hive_cat_file):
+            hive_cat_file = "outputs/hive_results/hive_category_summary.tsv"
+
+        hive_chan_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), "outputs", "hive_results", "hive_top_channels.tsv")
+        if not os.path.exists(hive_chan_file):
+            hive_chan_file = "outputs/hive_results/hive_top_channels.tsv"
+
+        col_h1, col_h2 = st.columns(2)
+        with col_h1:
+            st.markdown("**Hive: Category Performance Breakdown**")
+            if os.path.exists(hive_cat_file):
+                hive_df = pd.read_csv(hive_cat_file, sep="\t")
+                st.dataframe(hive_df, use_container_width=True)
+            else:
+                st.info("Hive category summary not found.")
+
+        with col_h2:
+            st.markdown("**Hive: Top 10 Channels by Views**")
+            if os.path.exists(hive_chan_file):
+                chan_df = pd.read_csv(hive_chan_file, sep="\t")
+                st.dataframe(chan_df, use_container_width=True)
+            else:
+                st.info("Hive top channels not found.")
 
 if __name__ == "__main__":
     main()
