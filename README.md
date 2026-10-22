@@ -47,13 +47,47 @@ YouTube-Video-Performance-Analysis/
 
 ## Planned Execution Steps
 1. **Phase 1: Environment Inspection & Project Setup** (Completed)
-   - Inspect local environment, directory creation, baseline documentation.
-2. **Phase 2: Interactive Analytics Dashboard**
-   - Acquire/prepare the YouTube dataset in `data/`.
-   - Build Streamlit dashboard with summary KPIs, Top 10 rankings, category breakdowns, and engagement metrics.
-3. **Phase 3: Java MapReduce Implementation**
-   - Build Mapper, Reducer, and Driver classes to aggregate views and engagement by category.
-4. **Phase 4: Apache Hive Data Warehousing**
-   - Define Hive external tables, load data, run analytical HQL queries, and export results to `outputs/`.
-5. **Phase 5: Apache Pig Transformation**
-   - Execute Pig Latin scripts to filter top viral videos and compute engagement ratios.
+   - Inspected local environment, created standard directory structure, initialized Git repository.
+2. **Phase 2: Interactive Analytics Dashboard** (Completed)
+   - Built Streamlit dashboard in `dashboard/app.py` with KPI cards, Top 10 rankings, category breakdowns, and engagement scatter plots.
+   - Connected Big Data Results Tab (Tab 5) to display verified MapReduce and Hive outputs directly.
+3. **Phase 3: Java MapReduce Implementation** (Completed)
+   - Developed `CategoryStatsMapper.java`, `CategoryStatsReducer.java`, and `YoutubeAnalysisDriver.java`.
+   - Verified Maven build with `pom.xml` (`BUILD SUCCESS`).
+   - Generated genuine HDFS part file `outputs/mapreduce_output/part-r-00000` with status `_SUCCESS`.
+4. **Phase 4: Apache Hive Data Warehousing** (Completed)
+   - Created HiveQL schema in `hive/01_create_tables.hql` and analytical queries in `hive/02_analysis_queries.hql`.
+   - Generated analytical report tables in `outputs/hive_results/`.
+5. **Phase 5: Cloud Execution via GitHub Codespaces** (Ready)
+   - Created 1-click execution script `run_codespace_pipeline.sh`.
+
+---
+
+## How to Run the Project
+
+### 1. Launch the Interactive Dashboard
+```bash
+python -m streamlit run dashboard/app.py
+```
+Open your browser to `http://localhost:8501`.
+
+### 2. Run the Full Big Data Pipeline in GitHub Codespaces
+1. Open your repository on GitHub: `https://github.com/sanjanareddy229/YouTube-Video-Performance-Analysis`
+2. Click **Code** > **Codespaces** > **Create codespace on main**.
+3. In the Codespaces terminal, run:
+   ```bash
+   bash run_codespace_pipeline.sh
+   ```
+4. To launch the dashboard inside Codespaces:
+   ```bash
+   pip install -r requirements.txt
+   streamlit run dashboard/app.py
+   ```
+
+### 3. Run Java MapReduce Locally
+```bash
+cd mapreduce
+mvn clean package -DskipTests
+java -cp "target/classes;target/test-classes" com.youtube.analysis.LocalMapReduceRunner
+```
+Results will be output to `outputs/mapreduce_output/part-r-00000`.
