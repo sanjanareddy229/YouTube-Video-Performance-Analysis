@@ -1,0 +1,28 @@
+# Large dataset files (to be downloaded or dragged into Codespaces)
+data/*.csv
+*.csv
+
+# Python cache & compiled files
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Sensitive files & credentials
+.env
+.env.*
+*.pem
+*.key
+*.cert
+*.p12
+secrets.toml
+
+# OS & Editor temporary files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
